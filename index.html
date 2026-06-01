@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seminar GyGe Solingen – Projektmanagement</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:       #2B5C98;
+      --blue-dark:  #1e4272;
+      --blue-mid:   #3a6faf;
+      --blue-light: #e8f0f9;
+      --blue-xlight:#f2f6fc;
+      --gray-dark:  #3c3c3c;
+      --gray-mid:   #6b6b6b;
+      --gray-light: #f4f5f7;
+      --border:     #dde3ec;
+      --white:      #ffffff;
+
+      /* 10 Prozesse GyGe */
+      --p1:  #2B5C98;  /* Kernseminar          – ZfsL-Blau     */
+      --p2:  #e63946;  /* Deutsch               – Rot           */
+      --p3:  #2a9d8f;  /* Mathematik            – Teal          */
+      --p4:  #f4a261;  /* Englisch              – Orange        */
+      --p5:  #7b5ea7;  /* Geschichte/Sozialw.   – Violett       */
+      --p6:  #95c11f;  /* Naturwiss. (Bio/Chem) – Grün          */
+      --p7:  #219ebc;  /* Informatik/Medien     – Cyan          */
+      --p8:  #fb8500;  /* Kunst/Musik           – Bernstein     */
+      --p9:  #e9c46a;  /* Sport                 – Gelb          */
+      --p10: #457b9d;  /* Überfachliche Ausb.   – Stahlblau     */
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--white);
+      color: var(--gray-dark);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem; height: 68px;
+      background: var(--white);
+      border-bottom: 3px solid var(--blue);
+      box-shadow: 0 2px 8px rgba(43,92,152,.08);
+    }
+    .logo-wrap { display: flex; align-items: center; gap: .85rem; }
+    .logo-icon { width: 40px; height: 40px; flex-shrink: 0; }
+    .logo-text strong { font-size: 1.05rem; font-weight: 800; color: var(--blue); display: block; line-height: 1.2; }
+    .logo-text small  { font-size: .68rem; color: var(--gray-mid); }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a { color: var(--gray-mid); text-decoration: none; font-size: .87rem; font-weight: 500; transition: color .2s; }
+    nav ul a:hover { color: var(--blue); }
+    .btn-nav {
+      padding: .45rem 1.2rem;
+      background: var(--blue); color: var(--white);
+      border: none; border-radius: 6px;
+      font-size: .87rem; font-weight: 600; cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-nav:hover { background: var(--blue-dark); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 55%, var(--blue-mid) 100%);
+      color: var(--white);
+      padding: 5.5rem 2rem 4.5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -100px; right: -60px;
+      width: 380px; height: 380px; border-radius: 50%;
+      background: rgba(255,255,255,.05); pointer-events: none;
+    }
+    .hero-inner { max-width: 800px; margin: 0 auto; position: relative; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .3rem 1rem;
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px; font-size: .78rem; letter-spacing: .5px;
+      margin-bottom: 1.4rem; background: rgba(255,255,255,.1);
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 800; letter-spacing: -1px; line-height: 1.1;
+      margin-bottom: 1.1rem;
+    }
+    .hero h1 span { opacity: .75; font-weight: 400; font-size: .6em; display: block; letter-spacing: 0; margin-bottom: .3rem; }
+    .hero p { font-size: 1rem; opacity: .88; max-width: 540px; margin-bottom: 2.25rem; }
+    .hero-cta { display: flex; gap: .85rem; flex-wrap: wrap; }
+    .btn-primary {
+      padding: .7rem 1.8rem; background: var(--white); color: var(--blue);
+      border: none; border-radius: 8px; font-size: .93rem; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,0,0,.15); transition: transform .15s, box-shadow .15s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+    .btn-ghost {
+      padding: .7rem 1.8rem; background: transparent; color: var(--white);
+      border: 2px solid rgba(255,255,255,.45); border-radius: 8px;
+      font-size: .93rem; font-weight: 600; cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,.1); }
+
+    /* ── SECTION WRAPPER ── */
+    .section { padding: 4.5rem 2rem; max-width: 1280px; margin: 0 auto; }
+    .section-label {
+      text-align: center; color: var(--blue);
+      font-size: .74rem; text-transform: uppercase; letter-spacing: 2.5px;
+      font-weight: 700; margin-bottom: .4rem;
+    }
+    .section-title {
+      text-align: center; font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+      font-weight: 800; letter-spacing: -.4px; color: var(--gray-dark); margin-bottom: .65rem;
+    }
+    .section-sub { text-align: center; color: var(--gray-mid); max-width: 500px; margin: 0 auto 2.75rem; font-size: .93rem; }
+
+    /* ── PROZESSE ── */
+    .processes {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .9rem;
+    }
+    .process-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 11px;
+      padding: 1.1rem 1rem; display: flex; align-items: center; gap: .85rem;
+      border-top: 4px solid transparent;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .process-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(43,92,152,.1); }
+    .process-dot {
+      width: 38px; height: 38px; border-radius: 9px;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .process-card h4 { font-size: .87rem; font-weight: 700; color: var(--gray-dark); }
+    .process-card span { font-size: .73rem; color: var(--gray-mid); }
+
+    /* ── KANBAN ── */
+    #board { background: var(--gray-light); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    #board .section { max-width: 100%; padding: 4rem 2rem; }
+    .board-scroll { overflow-x: auto; padding-bottom: 1rem; }
+    .board { display: flex; gap: .9rem; min-width: max-content; }
+    .column {
+      width: 245px; background: var(--white); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1rem; flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,.04);
+    }
+    .column-header {
+      display: flex; align-items: center; gap: .55rem;
+      margin-bottom: .9rem; padding-bottom: .7rem; border-bottom: 1px solid var(--border);
+    }
+    .col-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .col-title { font-size: .83rem; font-weight: 700; color: var(--gray-dark); }
+    .col-count {
+      margin-left: auto; background: var(--gray-light);
+      font-size: .68rem; padding: .12rem .45rem; border-radius: 999px;
+      color: var(--gray-mid); font-weight: 600;
+    }
+    .card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 9px;
+      padding: .8rem; margin-bottom: .55rem; border-left: 3px solid transparent;
+      transition: transform .15s, box-shadow .15s; cursor: grab;
+    }
+    .card:hover { transform: translateX(2px); box-shadow: 0 3px 10px rgba(43,92,152,.1); }
+    .card-title { font-size: .79rem; font-weight: 600; margin-bottom: .4rem; color: var(--gray-dark); }
+    .card-meta { font-size: .69rem; color: var(--gray-mid); display: flex; gap: .45rem; align-items: center; }
+    .card-tag { font-size: .63rem; padding: .12rem .45rem; border-radius: 999px; font-weight: 700; }
+    .card-avatar {
+      width: 20px; height: 20px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: .58rem; font-weight: 700; color: #fff; flex-shrink: 0; margin-left: auto;
+    }
+
+    /* ── LEGENDE ── */
+    .legend-stripe { display: flex; flex-wrap: wrap; gap: .55rem; justify-content: center; margin-bottom: 1.75rem; }
+    .legend-pill {
+      display: flex; align-items: center; gap: .35rem;
+      padding: .28rem .8rem; border-radius: 999px;
+      font-size: .73rem; font-weight: 600; border: 1.5px solid transparent;
+    }
+    .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+    /* ── STATS ── */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.1rem; }
+    .stat-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.6rem; border-top: 4px solid var(--blue);
+    }
+    .stat-card .value { font-size: 2.4rem; font-weight: 800; line-height: 1; color: var(--blue); }
+    .stat-card .label { color: var(--gray-mid); font-size: .83rem; margin-top: .3rem; }
+    .stat-card .trend { font-size: .73rem; margin-top: .45rem; color: #2a9d8f; font-weight: 600; }
+
+    /* ── FEATURES ── */
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.1rem; }
+    .feature-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1.6rem;
+      transition: border-color .2s;
+    }
+    .feature-card:hover { border-color: var(--blue); }
+    .feature-icon {
+      width: 42px; height: 42px; border-radius: 11px; background: var(--blue-light);
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: .9rem;
+    }
+    .feature-card h3 { font-size: .93rem; font-weight: 700; color: var(--gray-dark); margin-bottom: .45rem; }
+    .feature-card p { font-size: .81rem; color: var(--gray-mid); }
+
+    /* ── TEAM ── */
+    .team-card {
+      display: flex; align-items: center; gap: 1.1rem;
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem; border-left: 4px solid var(--blue);
+    }
+    .team-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--blue); color: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 800; flex-shrink: 0;
+    }
+    .team-card h4 { font-size: .9rem; font-weight: 700; color: var(--gray-dark); }
+    .team-card p { font-size: .78rem; color: var(--gray-mid); }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center;
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 100%);
+      color: var(--white); padding: 4.5rem 2rem;
+    }
+    .cta-section h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -.4px; margin-bottom: .9rem; }
+    .cta-section p { opacity: .88; margin-bottom: 2rem; font-size: .95rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 3px solid var(--blue); padding: 1.5rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      color: var(--gray-mid); font-size: .78rem; background: var(--white);
+    }
+    footer strong { color: var(--blue); }
+    footer a { color: var(--gray-mid); text-decoration: none; }
+    footer a:hover { color: var(--blue); }
+
+    ::-webkit-scrollbar { height: 5px; }
+    ::-webkit-scrollbar-track { background: var(--gray-light); }
+    ::-webkit-scrollbar-thumb { background: var(--blue-light); border-radius: 99px; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo-wrap">
+    <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="7" width="3" height="26" fill="#2B5C98"/>
+      <rect x="34" y="7" width="3" height="26" fill="#2B5C98"/>
+      <path d="M6 20 Q20 5 34 20" stroke="#2B5C98" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <rect x="3" y="7" width="9" height="3" fill="#2B5C98"/>
+      <rect x="28" y="7" width="9" height="3" fill="#2B5C98"/>
+    </svg>
+    <div class="logo-text">
+      <strong>Seminar GyGe · Solingen</strong>
+      <small>ZfsL · Zentrum für schulpraktische Lehrerausbildung</small>
+    </div>
+  </div>
+  <ul>
+    <li><a href="#prozesse">Prozesse</a></li>
+    <li><a href="#board">Board</a></li>
+    <li><a href="#features">Features</a></li>
+  </ul>
+  <button class="btn-nav">Anmelden</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      🎓 Seminar GyGe · Gymnasium &amp; Gesamtschule · Solingen
+    </div>
+    <h1>
+      <span>Seminar GyGe Solingen</span>
+      Ausbildung. Board. Überblick.
+    </h1>
+    <p>Alle Ausbildungsprozesse des Seminars GyGe koordiniert visualisieren – Kernseminar, Fachseminare und Unterrichtsbesuche auf einen Blick.</p>
+    <div class="hero-cta">
+      <button class="btn-primary">Zum Board →</button>
+      <button class="btn-ghost">Mehr erfahren</button>
+    </div>
+  </div>
+</section>
+
+<!-- PROZESSE -->
+<section class="section" id="prozesse">
+  <p class="section-label">Ausbildungsprozesse</p>
+  <h2 class="section-title">10 Prozesse im Seminar GyGe</h2>
+  <p class="section-sub">Kernseminar, alle Fachseminare und übergreifende Prozesse – farblich klar unterschieden.</p>
+  <div class="processes">
+    <div class="process-card" style="border-top-color:var(--p1)">
+      <div class="process-dot" style="background:rgba(43,92,152,.12);color:var(--p1)">📋</div>
+      <div><h4>Kernseminar</h4><span>Prozess 1</span></div>
+    </div>
+    <div class="process-card" style="border-top-color:var(--p2)">
+      <div class="process-dot" style="background:rgba(230,57,70,.1);color:var(--p2)">📖</div>
+      <div><h4>FS Deutsch</h4><span>Prozess 2</span></div>
+    </div>
+    <div class="process-card" style="border-top-color:var(--p3)">
+      <div class="process-dot" style="background:rgba(42,157,143,.1);color:var(--p3)">📐</div>
+      <div><h4>FS Mathematik</h4><span>Prozess 3</span></div>
+    </div>
+    <div class="process-card" style="border-top-color:var(--p4)">
+      <div class="process-dot" style="background:rgba(244,162,97,.12);color:var(--p4)">🌍</div>
+      <div><h4>FS Englisch</h4><span>Prozess 4</span></div>
+    </div>
+    <div class="process-card" style="border-top-color:var(--p5)">
+      <div class="process-dot" style="background:rgba(123,94,167,.1);color:var(--p5)">🏛️</div>
+      <div><h4>FS Geschichte / SoWi</h4><span>Prozess 5</span></div>
+    </div>
+    <div class="process-card" style="border-top-color:var(--p6)">
+      <div class="process-dot" style="background:rgba(149,193,31,.12);color:var(--p6)">🔬</div>
+      <div><h4>FS Naturwissenschaften</h4><span>Prozess 6</span></div>
+    </div>
+    <div class="process-card" style="border-top-color:var(--p7)">
+      <div class="process-dot" style="background:rgba(33,158,188,.1);color:var(--p7)">💻</div>
+      <div><h4>FS Informatik / Medien</h4><span>Prozess 7</span></div>
+    </div>
+    <div class="process-card" style="border-top-color:var(--p8)">
+      <div class="process-dot" style="background:rgba(251,133,0,.1);color:var(--p8)">🎨</div>
+      <div><h4>FS Kunst / Musik</h4><span>Prozess 8</span></div>
+    </div>
+    <div class="process-card" style="border-top-color:var(--p9)">
+      <div class="process-dot" style="background:rgba(233,196,106,.15);color:#b8930a">⚽</div>
+      <div><h4>FS Sport</h4><span>Prozess 9</span></div>
+    </div>
+    <div class="process-card" style="border-top-color:var(--p10)">
+      <div class="process-dot" style="background:rgba(69,123,157,.1);color:var(--p10)">🤝</div>
+      <div><h4>Überfachliche Ausbildung</h4><span>Prozess 10</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- KANBAN BOARD -->
+<section id="board">
+  <div class="section">
+    <p class="section-label">Kanban Board</p>
+    <h2 class="section-title">Ausbildungsprozesse im Überblick</h2>
+    <p class="section-sub">Aufgaben per Drag &amp; Drop verschieben – farblich dem jeweiligen Seminar oder Prozess zugeordnet.</p>
+
+    <div class="legend-stripe">
+      <div class="legend-pill" style="background:rgba(43,92,152,.08);border-color:var(--p1);color:var(--p1)"><span class="legend-dot" style="background:var(--p1)"></span>Kernseminar</div>
+      <div class="legend-pill" style="background:rgba(230,57,70,.07);border-color:var(--p2);color:var(--p2)"><span class="legend-dot" style="background:var(--p2)"></span>Deutsch</div>
+      <div class="legend-pill" style="background:rgba(42,157,143,.07);border-color:var(--p3);color:var(--p3)"><span class="legend-dot" style="background:var(--p3)"></span>Mathematik</div>
+      <div class="legend-pill" style="background:rgba(244,162,97,.1);border-color:var(--p4);color:var(--p4)"><span class="legend-dot" style="background:var(--p4)"></span>Englisch</div>
+      <div class="legend-pill" style="background:rgba(123,94,167,.07);border-color:var(--p5);color:var(--p5)"><span class="legend-dot" style="background:var(--p5)"></span>Geschichte/SoWi</div>
+      <div class="legend-pill" style="background:rgba(149,193,31,.08);border-color:var(--p6);color:#6e9113"><span class="legend-dot" style="background:var(--p6)"></span>Naturwiss.</div>
+      <div class="legend-pill" style="background:rgba(33,158,188,.07);border-color:var(--p7);color:var(--p7)"><span class="legend-dot" style="background:var(--p7)"></span>Informatik</div>
+      <div class="legend-pill" style="background:rgba(251,133,0,.08);border-color:var(--p8);color:var(--p8)"><span class="legend-dot" style="background:var(--p8)"></span>Kunst/Musik</div>
+      <div class="legend-pill" style="background:rgba(233,196,106,.15);border-color:#b8930a;color:#b8930a"><span class="legend-dot" style="background:#b8930a"></span>Sport</div>
+      <div class="legend-pill" style="background:rgba(69,123,157,.08);border-color:var(--p10);color:var(--p10)"><span class="legend-dot" style="background:var(--p10)"></span>Überfachlich</div>
+    </div>
+
+    <div class="board-scroll">
+      <div class="board">
+
+        <!-- PLANUNG -->
+        <div class="column">
+          <div class="column-header">
+            <div class="col-dot" style="background:#9ca3af"></div>
+            <span class="col-title">Planung</span>
+            <span class="col-count">5</span>
+          </div>
+          <div class="card" style="border-left-color:var(--p1)">
+            <div class="card-title">Kernseminarplan SoSe 26</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(43,92,152,.12);color:var(--p1)">Kernseminar</span>
+              <span class="card-avatar" style="background:var(--p1)">CS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p2)">
+            <div class="card-title">UB-Termine Deutsch abstimmen</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(230,57,70,.1);color:var(--p2)">Deutsch</span>
+              <span class="card-avatar" style="background:var(--p2)">FS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p5)">
+            <div class="card-title">Fachseminarplan Geschichte</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(123,94,167,.1);color:var(--p5)">Geschichte</span>
+              <span class="card-avatar" style="background:var(--p5)">FS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p10)">
+            <div class="card-title">Ausbildungskonferenz vorbereiten</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(69,123,157,.1);color:var(--p10)">Überfachlich</span>
+              <span class="card-avatar" style="background:var(--p10)">CS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p3)">
+            <div class="card-title">Hospitationsplan Mathematik</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(42,157,143,.1);color:var(--p3)">Mathematik</span>
+              <span class="card-avatar" style="background:var(--p3)">FS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- IN ARBEIT -->
+        <div class="column">
+          <div class="column-header">
+            <div class="col-dot" style="background:var(--blue)"></div>
+            <span class="col-title">In Arbeit</span>
+            <span class="col-count">5</span>
+          </div>
+          <div class="card" style="border-left-color:var(--p1)">
+            <div class="card-title">KS: Unterricht planen &amp; gestalten</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(43,92,152,.12);color:var(--p1)">Kernseminar</span>
+              <span class="card-avatar" style="background:var(--p1)">CS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p4)">
+            <div class="card-title">UB-Vorbesprechung Englisch</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(244,162,97,.12);color:var(--p4)">Englisch</span>
+              <span class="card-avatar" style="background:var(--p4)">FS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p6)">
+            <div class="card-title">FS Bio: Experimentieren im U.</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(149,193,31,.12);color:#6e9113">Naturwiss.</span>
+              <span class="card-avatar" style="background:var(--p6)">FS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p7)">
+            <div class="card-title">Medienkompetenz im Unterricht</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(33,158,188,.1);color:var(--p7)">Informatik</span>
+              <span class="card-avatar" style="background:var(--p7)">FS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p10)">
+            <div class="card-title">Beratungsgespräche LAA</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(69,123,157,.1);color:var(--p10)">Überfachlich</span>
+              <span class="card-avatar" style="background:var(--p10)">CS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- UNTERRICHTSBESUCH -->
+        <div class="column">
+          <div class="column-header">
+            <div class="col-dot" style="background:var(--p4)"></div>
+            <span class="col-title">Unterrichtsbesuch</span>
+            <span class="col-count">4</span>
+          </div>
+          <div class="card" style="border-left-color:var(--p2)">
+            <div class="card-title">UB Deutsch – Schulze, J.</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(230,57,70,.1);color:var(--p2)">Deutsch</span>
+              <span class="card-avatar" style="background:var(--p2)">FS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p3)">
+            <div class="card-title">UB Mathe – Müller, A.</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(42,157,143,.1);color:var(--p3)">Mathematik</span>
+              <span class="card-avatar" style="background:var(--p3)">FS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p9)">
+            <div class="card-title">UB Sport – Wagner, T.</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(233,196,106,.15);color:#b8930a">Sport</span>
+              <span class="card-avatar" style="background:#b8930a">FS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p8)">
+            <div class="card-title">UB Kunst – Brandt, L.</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(251,133,0,.1);color:var(--p8)">Kunst</span>
+              <span class="card-avatar" style="background:var(--p8)">FS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- NACHBESPRECHUNG -->
+        <div class="column">
+          <div class="column-header">
+            <div class="col-dot" style="background:var(--p5)"></div>
+            <span class="col-title">Nachbesprechung</span>
+            <span class="col-count">3</span>
+          </div>
+          <div class="card" style="border-left-color:var(--p2)">
+            <div class="card-title">NB Deutsch – Schulze, J.</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(230,57,70,.1);color:var(--p2)">Deutsch</span>
+              <span class="card-avatar" style="background:var(--p2)">FS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p1)">
+            <div class="card-title">KS-Reflexion: Klassenführung</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(43,92,152,.12);color:var(--p1)">Kernseminar</span>
+              <span class="card-avatar" style="background:var(--p1)">CS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p6)">
+            <div class="card-title">NB Bio – Meier, S.</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(149,193,31,.12);color:#6e9113">Naturwiss.</span>
+              <span class="card-avatar" style="background:var(--p6)">FS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRÜFUNG -->
+        <div class="column">
+          <div class="column-header">
+            <div class="col-dot" style="background:#fb8500"></div>
+            <span class="col-title">Prüfung</span>
+            <span class="col-count">2</span>
+          </div>
+          <div class="card" style="border-left-color:#fb8500">
+            <div class="card-title">Lehrprobe – Hoffmann, K.</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(251,133,0,.12);color:#fb8500">Prüfung</span>
+              <span class="card-avatar" style="background:var(--p4)">FS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:#fb8500">
+            <div class="card-title">Kolloquium – Fischer, M.</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(251,133,0,.12);color:#fb8500">Prüfung</span>
+              <span class="card-avatar" style="background:var(--p1)">CS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ERLEDIGT -->
+        <div class="column">
+          <div class="column-header">
+            <div class="col-dot" style="background:#2a9d8f"></div>
+            <span class="col-title">Erledigt</span>
+            <span class="col-count">4</span>
+          </div>
+          <div class="card" style="border-left-color:var(--p1);opacity:.7">
+            <div class="card-title">Einführungstag WiSe 25/26 ✓</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(43,92,152,.12);color:var(--p1)">Kernseminar</span>
+              <span class="card-avatar" style="background:var(--p1)">CS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p3);opacity:.7">
+            <div class="card-title">FS Mathe: Diagnostik ✓</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(42,157,143,.1);color:var(--p3)">Mathematik</span>
+              <span class="card-avatar" style="background:var(--p3)">FS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p10);opacity:.7">
+            <div class="card-title">Seminarkonferenz Dez. 25 ✓</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(69,123,157,.1);color:var(--p10)">Überfachlich</span>
+              <span class="card-avatar" style="background:var(--p10)">CS</span>
+            </div>
+          </div>
+          <div class="card" style="border-left-color:var(--p5);opacity:.7">
+            <div class="card-title">FS Geschichte: Quellenarbeit ✓</div>
+            <div class="card-meta">
+              <span class="card-tag" style="background:rgba(123,94,167,.1);color:var(--p5)">Geschichte</span>
+              <span class="card-avatar" style="background:var(--p5)">FS</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="section">
+  <p class="section-label">Kennzahlen</p>
+  <h2 class="section-title">Seminar GyGe auf einen Blick</h2>
+  <p class="section-sub" style="margin-bottom:2.25rem">Aktuelle Übersicht aller Ausbildungsprozesse.</p>
+  <div class="stats">
+    <div class="stat-card">
+      <div class="value">10</div>
+      <div class="label">Aktive Prozesse</div>
+      <div class="trend">KS + 9 Fachseminare</div>
+    </div>
+    <div class="stat-card" style="border-top-color:var(--p2)">
+      <div class="value" style="color:var(--p2)">23</div>
+      <div class="label">Offene Aufgaben</div>
+      <div class="trend">↑ 4 seit letzter Woche</div>
+    </div>
+    <div class="stat-card" style="border-top-color:#2a9d8f">
+      <div class="value" style="color:#2a9d8f">4</div>
+      <div class="label">Abgeschlossen</div>
+      <div class="trend">Dieses Quartal</div>
+    </div>
+    <div class="stat-card" style="border-top-color:#fb8500">
+      <div class="value" style="color:#fb8500">2</div>
+      <div class="label">Laufende Prüfungen</div>
+      <div class="trend">Nächste: 10.06.2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- SEMINARLEITUNG -->
+<section style="background:var(--gray-light);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="section" style="padding-top:3.5rem;padding-bottom:3.5rem">
+    <p class="section-label">Seminarleitung</p>
+    <h2 class="section-title">Verantwortliche im Seminar GyGe</h2>
+    <p class="section-sub" style="margin-bottom:2rem">Ausbilderinnen und Ausbilder am ZfsL Solingen.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">
+      <div class="team-card">
+        <div class="team-avatar">CS</div>
+        <div>
+          <h4>Christian Schmahl</h4>
+          <p>Seminarleitung GyGe · ZfsL Solingen</p>
+        </div>
+      </div>
+      <div class="team-card" style="border-left-color:var(--p2)">
+        <div class="team-avatar" style="background:var(--p2)">FS</div>
+        <div>
+          <h4>Fachseminar Deutsch</h4>
+          <p>Ausbildung Sekundarstufen I &amp; II</p>
+        </div>
+      </div>
+      <div class="team-card" style="border-left-color:var(--p3)">
+        <div class="team-avatar" style="background:var(--p3)">FS</div>
+        <div>
+          <h4>Fachseminar Mathematik</h4>
+          <p>Ausbildung Sekundarstufen I &amp; II</p>
+        </div>
+      </div>
+      <div class="team-card" style="border-left-color:var(--p4)">
+        <div class="team-avatar" style="background:var(--p4)">FS</div>
+        <div>
+          <h4>Fachseminar Englisch</h4>
+          <p>Ausbildung Sekundarstufen I &amp; II</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <p class="section-label">Features</p>
+  <h2 class="section-title">Speziell für das Seminar GyGe</h2>
+  <p class="section-sub" style="margin-bottom:2.5rem">Zugeschnitten auf die Anforderungen der gymnasialen Lehrerausbildung.</p>
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h3>Fachseminar-Farbkodierung</h3>
+      <p>Jedes Fachseminar hat eine feste Farbe – sofortige Zuordnung aller Aufgaben ohne Suche.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👁️</div>
+      <h3>Unterrichtsbesuche tracken</h3>
+      <p>Vor-, Haupt- und Nachbesprechung als verknüpfte Aufgaben – kein UB geht verloren.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Seminarkalender</h3>
+      <p>Kern- und Fachseminartermine, Prüfungen und Konferenzen in einer gemeinsamen Ansicht.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>LAA-Fortschritt</h3>
+      <p>Welche Meilensteine haben die LAA erreicht? Welche Ausbildungsstandards stehen noch aus?</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <h3>Fristen &amp; Erinnerungen</h3>
+      <p>Automatische Hinweise vor Prüfungsterminen, Abgabefristen und gesetzlichen Vorgaben.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>Rollen &amp; Zugriffsrechte</h3>
+      <p>Seminarleitung, Fachseminarleitungen und LAA sehen nur die für sie relevanten Bereiche.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Projektmanagement für das Seminar GyGe</h2>
+  <p>Alle Prozesse. Alle Fachseminare. Ein gemeinsames Board.</p>
+  <button class="btn-primary" style="font-size:.98rem;padding:.8rem 2.1rem">
+    Jetzt loslegen →
+  </button>
+</section>
+
+<footer>
+  <div class="logo-wrap">
+    <svg width="30" height="30" viewBox="0 0 40 40" fill="none"><rect x="3" y="7" width="3" height="26" fill="#2B5C98"/><rect x="34" y="7" width="3" height="26" fill="#2B5C98"/><path d="M6 20 Q20 5 34 20" stroke="#2B5C98" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="3" y="7" width="9" height="3" fill="#2B5C98"/><rect x="28" y="7" width="9" height="3" fill="#2B5C98"/></svg>
+    <div><strong>Seminar GyGe · ZfsL Solingen</strong></div>
+  </div>
+  <div>
+    <a href="https://www.zfsl.nrw.de/SOL" target="_blank">zfsl.nrw.de/SOL</a> ·
+    <a href="#">Impressum</a> ·
+    <a href="#">Datenschutz</a>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.card').forEach(card => {
+    card.draggable = true;
+    card.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', card.outerHTML);
+      setTimeout(() => card.style.opacity = '.3', 0);
+    });
+    card.addEventListener('dragend', () => { card.style.opacity = ''; });
+  });
+  document.querySelectorAll('.column').forEach(col => {
+    col.addEventListener('dragover', e => { e.preventDefault(); col.style.background = 'var(--blue-xlight)'; });
+    col.addEventListener('dragleave', () => { col.style.background = ''; });
+    col.addEventListener('drop', e => {
+      e.preventDefault(); col.style.background = '';
+      const html = e.dataTransfer.getData('text/plain');
+      if (!html) return;
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      const newCard = tmp.firstChild;
+      newCard.style.opacity = '';
+      col.insertBefore(newCard, col.querySelector('.column-header').nextSibling);
+      newCard.draggable = true;
+      newCard.addEventListener('dragstart', ev => {
+        ev.dataTransfer.setData('text/plain', newCard.outerHTML);
+        setTimeout(() => newCard.style.opacity = '.3', 0);
+      });
+      newCard.addEventListener('dragend', () => { newCard.style.opacity = ''; });
+      document.querySelectorAll('.column').forEach(c => {
+        c.querySelector('.col-count').textContent = c.querySelectorAll('.card').length;
+      });
+    });
+  });
+</script>
+</body>
+</html>
